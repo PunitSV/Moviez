@@ -40,7 +40,7 @@ class MovieTVC: UITableViewCell {
     func configureCell(title:String?, imageUrl:String?, index:Int?) {
         
         self.movieTitleLabel.text = title
-        let imageUrl = MovieService.imageBaseUrl + (imageUrl ?? "")
+        let imageUrl = MovieService.imageBaseUrl_w200 + (imageUrl ?? "")
         self.moviePosterIV.sd_setImage(with: URL(string: imageUrl))
         self.movieTitleButton.tag = index ?? -1
     }

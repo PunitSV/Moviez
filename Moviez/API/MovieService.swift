@@ -11,7 +11,8 @@ import Alamofire
 class MovieService {
     
     private let apiKey = "d2909395fe406b033a23483c4adba65b"
-    public static let imageBaseUrl = "https://image.tmdb.org/t/p/w200"
+    public static let imageBaseUrl_w200 = "https://image.tmdb.org/t/p/w200"
+    public static let imageBaseUrl_w400 = "https://image.tmdb.org/t/p/w400"
     private let apiBaseUrl = "https://api.themoviedb.org/3/movie/"
     private let popularMoviesEndpoint = "popular"
     

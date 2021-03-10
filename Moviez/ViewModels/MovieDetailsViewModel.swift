@@ -11,6 +11,7 @@ class MovieDetailsViewModel: NSObject {
     
     
     private var movieService:MovieService!
+    private var databaseHelper:DataBaseHelper!
     
     private var isLoading:Bool! {
         didSet {
@@ -22,11 +23,7 @@ class MovieDetailsViewModel: NSObject {
         }
     }
     
-    var movieId:String! {
-        didSet {
-            self.getMovieDetails()
-        }
-    }
+    var movieId:Int!
     
     private(set) var posterImage:String! {
         didSet {
@@ -66,33 +63,61 @@ class MovieDetailsViewModel: NSObject {
     var bindGenre: (() -> ()) = {}
     var bindDate: (() -> ()) = {}
     var bindLanguages: (() -> ()) = {}
-    var bindOverview: (() -> ()) = {}
+    var bindOverview: (() -> ())! {
+        didSet{
+            self.getMovieDetails()
+        }
+    }
     
     override init() {
         super.init()
         self.movieService = MovieService()
+        self.databaseHelper = DataBaseHelper()
         self.genres = ""
         self.languages = ""
     }
     
     func getMovieDetails() {
-        self.movieService.fetchMovieDetails(movieId: movieId) { (movie) in
-            self.posterImage = MovieService.imageBaseUrl_w400 + movie.posterPath!
-            self.movieTitle = movie.title
-            
-            for genre in movie.genres! {
-                self.genres += genre.name! + ","
+        
+        if(Connectivity.isConnectedToInternet()) {
+            self.movieService.fetchMovieDetails(movieId: movieId) { (movie) in
+                self.posterImage = MovieService.imageBaseUrl_w400 + movie.posterPath!
+                self.movieTitle = movie.title
+                
+                for genre in movie.genres! {
+                    self.genres += genre.name! + ","
+                }
+                self.genres.removeLast()
+                
+                self.date = movie.releaseDate!
+                for language in movie.spokenLanguages! {
+                    self.languages += language.name! + ","
+                }
+                self.languages.removeLast()
+                
+                self.overview = movie.overview!
+                
+                self.databaseHelper.emptyMovieDetails(withMovieId: self.movieId)
+                self.databaseHelper.addMovieDetailsToDB(movie: movie)
             }
-            self.genres.removeLast()
-            
-            self.date = movie.releaseDate!
-            for language in movie.spokenLanguages! {
-                self.languages += language.name! + ","
+        } else {
+            self.databaseHelper.getMovieDetails(movieId: self.movieId) { (movie) in
+                self.posterImage = MovieService.imageBaseUrl_w400 + movie.posterPath!
+                self.movieTitle = movie.title
+                
+                for genre in movie.genres! {
+                    self.genres += genre.name! + ","
+                }
+                self.genres.removeLast()
+                
+                self.date = movie.releaseDate!
+                for language in movie.spokenLanguages! {
+                    self.languages += language.name! + ","
+                }
+                self.languages.removeLast()
+                
+                self.overview = movie.overview!
             }
-            self.languages.removeLast()
-            
-            self.overview = movie.overview!
-            
         }
     }
 }

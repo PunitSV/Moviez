@@ -113,32 +113,27 @@
                                 <rect key="frame" x="0.0" y="88" width="414" height="774"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6jr-9l-TXM">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="812.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="795.5"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="45" translatesAutoresizingMaskIntoConstraints="NO" id="eG1-d7-1JK">
-                                                <rect key="frame" x="15" y="15" width="384" height="782.5"/>
+                                                <rect key="frame" x="15" y="15" width="384" height="765.5"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="L9j-rR-o1G">
-                                                        <rect key="frame" x="0.0" y="0.0" width="384" height="504.5"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="384" height="487.5"/>
                                                         <subviews>
                                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pencil.circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="hLY-fs-i7Z">
                                                                 <rect key="frame" x="0.0" y="0.5" width="384" height="383"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" secondItem="hLY-fs-i7Z" secondAttribute="height" multiplier="1:1" id="uBC-io-o0T"/>
                                                                 </constraints>
-                                                                <variation key="default">
-                                                                    <mask key="constraints">
-                                                                        <exclude reference="uBC-io-o0T"/>
-                                                                    </mask>
-                                                                </variation>
                                                                 <variation key="heightClass=regular-widthClass=compact">
                                                                     <mask key="constraints">
                                                                         <include reference="uBC-io-o0T"/>
                                                                     </mask>
                                                                 </variation>
                                                             </imageView>
-                                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="32" translatesAutoresizingMaskIntoConstraints="NO" id="QAs-Tb-BdO">
-                                                                <rect key="frame" x="0.0" y="399" width="384" height="105.5"/>
+                                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalCentering" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="QAs-Tb-BdO">
+                                                                <rect key="frame" x="0.0" y="399" width="384" height="88.5"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Lorem Ipsum" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5yN-UK-2Hm">
                                                                         <rect key="frame" x="0.0" y="0.0" width="384" height="29"/>
@@ -147,7 +142,7 @@
                                                                         <nil key="highlightedColor"/>
                                                                     </label>
                                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rag-s2-WA0">
-                                                                        <rect key="frame" x="0.0" y="61" width="384" height="44.5"/>
+                                                                        <rect key="frame" x="0.0" y="44" width="384" height="44.5"/>
                                                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.20534567636986301" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="width" secondItem="Rag-s2-WA0" secondAttribute="height" multiplier="199:23" id="e9O-AA-jzq"/>
@@ -167,6 +162,7 @@
                                                             <constraint firstAttribute="trailing" secondItem="hLY-fs-i7Z" secondAttribute="trailing" id="14M-2G-kcO"/>
                                                             <constraint firstAttribute="trailing" secondItem="QAs-Tb-BdO" secondAttribute="trailing" id="APa-CD-fvS"/>
                                                             <constraint firstItem="QAs-Tb-BdO" firstAttribute="leading" secondItem="L9j-rR-o1G" secondAttribute="leading" id="Fer-KH-5Gq"/>
+                                                            <constraint firstAttribute="bottom" secondItem="QAs-Tb-BdO" secondAttribute="bottom" id="czI-IG-Cns"/>
                                                             <constraint firstItem="hLY-fs-i7Z" firstAttribute="leading" secondItem="L9j-rR-o1G" secondAttribute="leading" id="xlk-th-xN7"/>
                                                         </constraints>
                                                         <variation key="heightClass=compact-widthClass=regular" axis="horizontal" distribution="fillEqually">
@@ -177,7 +173,7 @@
                                                         </variation>
                                                     </stackView>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="GQj-ts-erW">
-                                                        <rect key="frame" x="0.0" y="549.5" width="384" height="233"/>
+                                                        <rect key="frame" x="0.0" y="532.5" width="384" height="233"/>
                                                         <subviews>
                                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="TyD-La-phl">
                                                                 <rect key="frame" x="0.0" y="0.0" width="55.5" height="47"/>
@@ -311,7 +307,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rrB-yB-ZKC" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1444.9275362318842" y="51.5625"/>
+            <point key="canvasLocation" x="1444.4196428571429" y="50.724637681159422"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="FxB-g2-WHW">

@@ -42,7 +42,7 @@ class MovieCatalogVC: UIViewController {
         if(segue.identifier == "details") {
             if let movieDetailsController = segue.destination as? MovieDetailsVC {
                 let detailViewModel = MovieDetailsViewModel()
-                detailViewModel.movieId = "\(movieCatalogViewModel.results[(sender as! UIButton).tag].id!)"
+                detailViewModel.movieId = movieCatalogViewModel.results[(sender as! UIButton).tag].id
                 #if DEBUG
                 print("\(movieCatalogViewModel.results[(sender as! UIButton).tag].id!)")
                 #endif

@@ -10,6 +10,7 @@ import Foundation
 class MovieCatalogViewModel: NSObject {
     
     private var movieService:MovieService!
+    private var databaseHelper:DataBaseHelper!
     private(set) var results:[Result]! {
         didSet {
             self.bindMoviesToTableView()
@@ -24,18 +25,30 @@ class MovieCatalogViewModel: NSObject {
             }
         }
     }
-    var bindMoviesToTableView: (() -> ()) = {}
+    var bindMoviesToTableView: (() -> ())! {
+        didSet {
+            getMovieCatalog()
+        }
+    }
     
     
     override init() {
         super.init()
         movieService = MovieService()
-        getMovieCatalog()
+        databaseHelper = DataBaseHelper()
     }
     
     func getMovieCatalog() {
-        self.movieService.fetchMovieCatalog(page: 10) { (movies) in
-            self.results = movies.results
+        if(Connectivity.isConnectedToInternet()) {
+            self.movieService.fetchMovieCatalog(page: 10) { (movies) in
+                self.results = movies.results
+                self.databaseHelper.emptyMovieCatalog(forPage: 10)
+                self.databaseHelper.addMoviesCatalogToDB(movies: movies)
+            }
+        } else {
+            self.databaseHelper.getMovieCatalog(page: 10) { (movies) in
+                self.results = movies.results
+            }
         }
     }
 }

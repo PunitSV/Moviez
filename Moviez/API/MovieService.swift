@@ -32,8 +32,8 @@ class MovieService {
         
     }
     
-    func fetchMovieDetails(movieId:String, completion : @escaping (Movie) -> ()) {
-        let url = apiBaseUrl + movieId
+    func fetchMovieDetails(movieId:Int, completion : @escaping (Movie) -> ()) {
+        let url = "\(apiBaseUrl)\(movieId)"
         let parameters:[String:Any] = ["api_key": apiKey]
         let request = AF.request(url,method: .get, parameters: parameters)
         request.responseDecodable(of: Movie.self) { (response) in

@@ -7,8 +7,11 @@
 
 import UIKit
 import SDWebImage
+import AVFoundation
+import AVKit
+import WebKit
 
-class MovieDetailsVC: UIViewController {
+class MovieDetailsVC: UIViewController, AVPlayerViewControllerDelegate {
     
     @IBOutlet weak var moviePosterIV: UIImageView!
     @IBOutlet weak var movieTitleLabel: UILabel!
@@ -19,7 +22,8 @@ class MovieDetailsVC: UIViewController {
     @IBOutlet weak var overviewLabel: UILabel!
     
     public var movieDetailViewModel:MovieDetailsViewModel!
-
+    var player:AVPlayerViewController!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -28,6 +32,10 @@ class MovieDetailsVC: UIViewController {
     }
     
     func bindViewModel() {
+        
+        self.movieDetailViewModel.bindTrailerList = {
+            self.showTrailerList()
+        }
         self.movieDetailViewModel.bindPosterImage = {
             self.updatePoster()
         }
@@ -77,8 +85,19 @@ class MovieDetailsVC: UIViewController {
     func updateMovieOverview() {
         self.overviewLabel.text = self.movieDetailViewModel.overview
     }
+    
+    override func present(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
+        if let controller = viewControllerToPresent as? AVPlayerViewController {
+            self.player = controller
+        }
+    }
+    
+    func showTrailerList() {
+       
+    }
 
     @IBAction func watchTrailer(_ sender: UIButton) {
+        self.movieDetailViewModel.getMovieTrailers()
     }
     /*
     // MARK: - Navigation

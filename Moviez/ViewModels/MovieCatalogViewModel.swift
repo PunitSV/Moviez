@@ -25,30 +25,77 @@ class MovieCatalogViewModel: NSObject {
             }
         }
     }
+    private(set) var toastMessage:String! {
+        didSet {
+            self.showToast()
+        }
+    }
+    private var currentPage:Int!
+    private var totalPages:Int!
     var bindMoviesToTableView: (() -> ())! {
         didSet {
-            getMovieCatalog()
+            fetchNextMovies()
         }
     }
     
+    var showToast: (() -> ()) = {}
     
     override init() {
         super.init()
+        currentPage = 12
+        totalPages = currentPage + 1
+        results = []
         movieService = MovieService()
         databaseHelper = DataBaseHelper()
     }
     
-    func getMovieCatalog() {
+    func getMovieCatalog(insert atStart:Bool) {
         if(Connectivity.isConnectedToInternet()) {
-            self.movieService.fetchMovieCatalog(page: 10) { (movies) in
-                self.results = movies.results
-                self.databaseHelper.emptyMovieCatalog(forPage: 10)
+            self.movieService.fetchMovieCatalog(page: currentPage) { (movies) in
+                if(atStart) {
+                    self.results.insert(contentsOf: movies.results!, at: 0)
+                } else {
+                    self.results.append(contentsOf: movies.results!)
+                }
+                self.totalPages = movies.totalPages
+                self.databaseHelper.emptyMovieCatalog(forPage: self.currentPage)
                 self.databaseHelper.addMoviesCatalogToDB(movies: movies)
             }
         } else {
-            self.databaseHelper.getMovieCatalog(page: 10) { (movies) in
-                self.results = movies.results
+            self.databaseHelper.getMovieCatalog(page: currentPage) { (movies) in
+                if(atStart) {
+                    self.results.insert(contentsOf: movies.results!, at: 0)
+                } else {
+                    self.results.append(contentsOf: movies.results!)
+                }
+                self.totalPages = movies.totalPages
             }
+        }
+    }
+    
+    func fetchNextMovies() {
+        currentPage+=1
+        #if DEBUG
+        print("Current Page: \(currentPage!)")
+        #endif
+        if(currentPage > totalPages) {
+            currentPage-=1
+            self.toastMessage = "That's it!!! No more movies available"
+        } else {
+            getMovieCatalog(insert: false)
+        }
+    }
+    
+    func fetchPreviousMovies() {
+        currentPage-=1
+        #if DEBUG
+        print("Current Page: \(currentPage!)")
+        #endif
+        if(currentPage < 1) {
+            currentPage+=1
+            self.toastMessage = "No previous movies available"
+        } else {
+            getMovieCatalog(insert: true)
         }
     }
 }

@@ -16,7 +16,7 @@ class DataBaseHelper {
         
         realm.beginWrite()
         for result in movies.results! {
-            let resultDB = ResultDB.create(id: result.id!, posterPath: result.posterPath!, releaseDate: result.releaseDate!, title: result.title!, voteAverage: result.voteAverage!)
+            let resultDB = ResultDB.create(id: result.id!, posterPath: result.posterPath ?? "", releaseDate: result.releaseDate ?? "N/A", title: result.title!, voteAverage: result.voteAverage!)
             realm.add(resultDB)
             results.append(resultDB)
         }

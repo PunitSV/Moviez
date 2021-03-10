@@ -24,7 +24,11 @@ class MovieDetailsViewModel: NSObject {
     }
     
     var movieId:Int!
-    
+    private(set) var movieVideoInfo:[VideoResult]! {
+        didSet {
+            self.bindTrailerList()
+        }
+    }
     private(set) var posterImage:String! {
         didSet {
             self.bindPosterImage()
@@ -57,7 +61,7 @@ class MovieDetailsViewModel: NSObject {
             self.bindOverview()
         }
     }
-
+    var bindTrailerList: (() -> ()) = {}
     var bindPosterImage: (() -> ()) = {}
     var bindMovieTitle: (() -> ()) = {}
     var bindGenre: (() -> ()) = {}
@@ -118,6 +122,12 @@ class MovieDetailsViewModel: NSObject {
                 
                 self.overview = movie.overview!
             }
+        }
+    }
+    
+    func getMovieTrailers() {
+        self.movieService.fetchMovieVideoDetails(movieId: self.movieId) { (movieVideoInfo) in
+            self.movieVideoInfo = movieVideoInfo.results
         }
     }
 }

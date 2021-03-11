@@ -7,11 +7,9 @@
 
 import UIKit
 import SDWebImage
-import AVFoundation
-import AVKit
-import WebKit
+import Cosmos
 
-class MovieDetailsVC: UIViewController, AVPlayerViewControllerDelegate {
+class MovieDetailsVC: UIViewController {
     
     @IBOutlet weak var moviePosterIV: UIImageView!
     @IBOutlet weak var movieTitleLabel: UILabel!
@@ -20,9 +18,10 @@ class MovieDetailsVC: UIViewController, AVPlayerViewControllerDelegate {
     @IBOutlet weak var releasedDateLabel: UILabel!
     @IBOutlet weak var languagesLabel: UILabel!
     @IBOutlet weak var overviewLabel: UILabel!
+    @IBOutlet weak var ratingView: CosmosView!
+    @IBOutlet weak var durationLabel: UILabel!
     
     public var movieDetailViewModel:MovieDetailsViewModel!
-    var player:AVPlayerViewController!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,13 +55,20 @@ class MovieDetailsVC: UIViewController, AVPlayerViewControllerDelegate {
             self.updateMovieLanguages()
         }
         
+        self.movieDetailViewModel.bindDuration = {
+            self.updateDuration()
+        }
+        
+        self.movieDetailViewModel.bindAverageVoting = {
+            self.updateRatings()
+        }
         self.movieDetailViewModel.bindOverview = {
             self.updateMovieOverview()
         }
     }
     
     func updatePoster() {
-        self.moviePosterIV.sd_setImage(with: URL(string: self.movieDetailViewModel.posterImage!))
+        self.moviePosterIV.sd_setImage(with: URL(string: self.movieDetailViewModel.posterImage!), placeholderImage: UIImage(named: "image_placeholder"))
         
     }
     
@@ -82,14 +88,16 @@ class MovieDetailsVC: UIViewController, AVPlayerViewControllerDelegate {
         self.languagesLabel.text = self.movieDetailViewModel.languages
     }
     
-    func updateMovieOverview() {
-        self.overviewLabel.text = self.movieDetailViewModel.overview
+    func updateDuration() {
+        self.durationLabel.text = self.movieDetailViewModel.duration
     }
     
-    override func present(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
-        if let controller = viewControllerToPresent as? AVPlayerViewController {
-            self.player = controller
-        }
+    func updateRatings() {
+        self.ratingView.rating = self.movieDetailViewModel.averageVoting
+    }
+    
+    func updateMovieOverview() {
+        self.overviewLabel.text = self.movieDetailViewModel.overview
     }
     
     func showTrailerList() {
@@ -97,16 +105,18 @@ class MovieDetailsVC: UIViewController, AVPlayerViewControllerDelegate {
     }
 
     @IBAction func watchTrailer(_ sender: UIButton) {
-        self.movieDetailViewModel.getMovieTrailers()
+        //self.movieDetailViewModel.getMovieTrailers()
     }
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        if(segue.identifier == "trailers") {
+            if let trailerController = segue.destination as? TrailersTVC {
+                let trailerViewModel = TrailerViewModel()
+                trailerViewModel.movieId = self.movieDetailViewModel.movieId
+                trailerController.trailerViewModel = trailerViewModel
+            }
+        }
     }
-    */
+    
 
 }

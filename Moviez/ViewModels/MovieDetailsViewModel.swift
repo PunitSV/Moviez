@@ -56,6 +56,16 @@ class MovieDetailsViewModel: NSObject {
             self.bindLanguages()
         }
     }
+    private(set) var averageVoting:Double! {
+        didSet {
+            self.bindAverageVoting()
+        }
+    }
+    private(set) var duration:String! {
+        didSet {
+            self.bindDuration()
+        }
+    }
     private(set) var overview:String! {
         didSet {
             self.bindOverview()
@@ -67,6 +77,8 @@ class MovieDetailsViewModel: NSObject {
     var bindGenre: (() -> ()) = {}
     var bindDate: (() -> ()) = {}
     var bindLanguages: (() -> ()) = {}
+    var bindAverageVoting: (() -> ()) = {}
+    var bindDuration: (() -> ()) = {}
     var bindOverview: (() -> ())! {
         didSet{
             self.getMovieDetails()
@@ -98,7 +110,13 @@ class MovieDetailsViewModel: NSObject {
                     self.languages += language.name! + ","
                 }
                 self.languages.removeLast()
+                if let duration = movie.runtime {
+                    self.duration = "\(duration) min"
+                } else {
+                    self.duration = "-"
+                }
                 
+                self.averageVoting = movie.voteAverage
                 self.overview = movie.overview!
                 
                 self.databaseHelper.emptyMovieDetails(withMovieId: self.movieId)
@@ -119,7 +137,13 @@ class MovieDetailsViewModel: NSObject {
                     self.languages += language.name! + ","
                 }
                 self.languages.removeLast()
+                if let duration = movie.runtime {
+                    self.duration = "\(duration) min"
+                } else {
+                    self.duration = "-"
+                }
                 
+                self.averageVoting = movie.voteAverage
                 self.overview = movie.overview!
             }
         }

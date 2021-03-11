@@ -16,9 +16,10 @@ class MovieDB: Object {
     @objc dynamic var releaseDate = ""
     var spokenLanguages = List<SpokenLanguageDB>()
     @objc dynamic var title = ""
+    @objc dynamic var runtime = 0
     @objc dynamic var voteAverage = 0.0
     
-    static func create(genres: [GenreDB], id: Int, overview: String, posterPath: String, releaseDate: String, spokenLanguages: [SpokenLanguageDB], title: String, voteAverage: Double) -> MovieDB {
+    static func create(genres: [GenreDB], id: Int, overview: String, posterPath: String, releaseDate: String, spokenLanguages: [SpokenLanguageDB], title: String, runtime:Int, voteAverage: Double) -> MovieDB {
         let movie = MovieDB()
         movie.genres.append(objectsIn: genres)
         movie.id = id
@@ -27,6 +28,7 @@ class MovieDB: Object {
         movie.releaseDate = releaseDate
         movie.spokenLanguages.append(objectsIn: spokenLanguages)
         movie.title = title
+        movie.runtime = runtime
         movie.voteAverage = voteAverage
         return movie
     }

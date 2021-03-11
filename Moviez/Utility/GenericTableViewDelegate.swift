@@ -32,35 +32,43 @@ class GenericTableViewDelegate: NSObject, UITableViewDelegate {
         let lastRowIndex = tableView.numberOfRows(inSection: lastSectionIndex) - 1
         
         if(isScrollUp) {
-            //if indexPath.section ==  lastSectionIndex && indexPath.row == lastRowIndex {
-                tableView.tableFooterView = activityIndicatorFooter
-            activityIndicatorFooter.startAnimating()
-                loadPagedItems(false)
-            //}
+            if indexPath.section ==  lastSectionIndex && indexPath.row == lastRowIndex {
+                
+                
+            }
         } else {
-           // if indexPath.section ==  0 && indexPath.row == 0 {
-                tableView.tableHeaderView = activityIndicatorHeader
-            activityIndicatorHeader.startAnimating()
-                loadPagedItems(true)
-            //}
+            if indexPath.section ==  0 && indexPath.row == 0 {
+                
+                
+            }
         }
         
         
     }
     
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        /*if targetContentOffset.pointee.y < scrollView.contentOffset.y {
-            self.isScrollingUp = true
-        } else {
-            self.isScrollingUp = false
-        }*/
+  
         if (scrollView.contentOffset.y < 0) {
             self.isScrollingUp = false
+            print("Top scroll")
+            loadPagedItems(true)
         } else if targetContentOffset.pointee.y < scrollView.contentOffset.y {
             self.isScrollingUp = true
+            loadPagedItems(false)
+            print("down scroll")
         } else {
             self.isScrollingUp = nil
         }
+    }
+    
+    func showHeaderView(forTableView tableView:UITableView) {
+        tableView.tableHeaderView = activityIndicatorHeader
+        activityIndicatorHeader.startAnimating()
+    }
+    
+    func showFooterView(forTableView tableView:UITableView) {
+        tableView.tableFooterView = activityIndicatorFooter
+        activityIndicatorFooter.startAnimating()
     }
     
     func hideHeaderView() {

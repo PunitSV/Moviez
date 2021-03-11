@@ -13,7 +13,7 @@ class MovieService {
     private let apiKey = "d2909395fe406b033a23483c4adba65b"
     public static let imageBaseUrl_w200 = "https://image.tmdb.org/t/p/w200"
     public static let imageBaseUrl_w400 = "https://image.tmdb.org/t/p/w400"
-    public static let videoBaseUrl = "https://www.youtube.com/embed/64-iSYVmMVY?playsinline=1"
+    public static let videoBaseUrl = "https://www.youtube.com/embed/" //"https://www.youtube.com/watch?v="
     private let apiBaseUrl = "https://api.themoviedb.org/3/movie/"
     private let popularMoviesEndpoint = "popular"
     private let movieVideosInfoEndpoint = "videos"

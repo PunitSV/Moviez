@@ -11,12 +11,13 @@ class MovieCatalogViewModel: NSObject {
     
     private var movieService:MovieService!
     private var databaseHelper:DataBaseHelper!
+    var hadScrolledUp:Bool!
     private(set) var results:[Result]! {
         didSet {
             self.bindMoviesToTableView()
         }
     }
-    private var isLoading:Bool! {
+    var isLoading:Bool! {
         didSet {
             if(isLoading) {
                 
@@ -43,45 +44,34 @@ class MovieCatalogViewModel: NSObject {
     
     override init() {
         super.init()
-        minimumPageFetched = 12
-        maximumPageFetched = 12
-        totalPages = minimumPageFetched + 1
         results = []
+        resetCounters()
         movieService = MovieService()
         databaseHelper = DataBaseHelper()
     }
     
-    func getMovieCatalog(insert atStart:Bool) {
+    func resetCounters() {
+        minimumPageFetched = 12
+        maximumPageFetched = 12
+        totalPages = minimumPageFetched + 1
+        
+    }
+    
+    func getMovieCatalog() {
         if(Connectivity.isConnectedToInternet()) {
-            if(atStart) {
-                self.movieService.fetchMovieCatalog(page: minimumPageFetched) { (movies) in
-                    self.results.insert(contentsOf: movies.results!, at: 0)
-                    self.totalPages = movies.totalPages
-                    self.databaseHelper.emptyMovieCatalog(forPage: self.minimumPageFetched)
-                    self.databaseHelper.addMoviesCatalogToDB(movies: movies)
-                }
-            } else {
-                self.movieService.fetchMovieCatalog(page: maximumPageFetched) { (movies) in            self.results.append(contentsOf: movies.results!)
-                    self.totalPages = movies.totalPages
-                    self.databaseHelper.emptyMovieCatalog(forPage: self.maximumPageFetched)
-                    self.databaseHelper.addMoviesCatalogToDB(movies: movies)
-                }
+            self.movieService.fetchMovieCatalog(page: minimumPageFetched) { (movies) in
+                self.results = movies.results!
+                self.totalPages = movies.totalPages
+                self.databaseHelper.emptyMovieCatalog(forPage: self.minimumPageFetched)
+                self.databaseHelper.addMoviesCatalogToDB(movies: movies)
             }
             
         } else {
-            if(atStart) {
-                self.databaseHelper.getMovieCatalog(page: minimumPageFetched) { (movies) in
-                    self.results.insert(contentsOf: movies.results!, at: 0)
-                    self.totalPages = movies.totalPages
-                }
-                
-            } else {
-                self.databaseHelper.getMovieCatalog(page: maximumPageFetched) { (movies) in
-                    self.results.append(contentsOf: movies.results!)
-                    self.totalPages = movies.totalPages
-                }
+            self.databaseHelper.getMovieCatalog(page: minimumPageFetched) { (movies) in
+                self.results = movies.results!
+                self.totalPages = movies.totalPages
             }
-            
+
         }
     }
     
@@ -94,7 +84,8 @@ class MovieCatalogViewModel: NSObject {
             maximumPageFetched-=1
             self.toastMessage = "That's it!!! No more movies available"
         } else {
-            getMovieCatalog(insert: false)
+            self.hadScrolledUp = false
+            getMovieCatalog()
         }
     }
     
@@ -107,7 +98,8 @@ class MovieCatalogViewModel: NSObject {
             minimumPageFetched+=1
             self.toastMessage = "No previous movies available"
         } else {
-            getMovieCatalog(insert: true)
+            self.hadScrolledUp = true
+            getMovieCatalog()
         }
     }
     

@@ -24,6 +24,8 @@ class MovieCatalogVC: UIViewController {
     }
     
     @IBAction func toggleMode(_ sender: UIBarButtonItem) {
+        self.dataSource.clearItems()
+        self.movieCatalogTV.reloadData()
         if(sender.tag == 1) {
             modeBarButton.image = UIImage(named: "search")
             sender.tag = 0
@@ -35,6 +37,9 @@ class MovieCatalogVC: UIViewController {
             titleView.text = "Movie Catalog"
             titleView.textAlignment = .center
             self.navigationItem.titleView = titleView
+            
+            self.movieCatalogViewModel.resetCounters()
+            self.movieCatalogViewModel.fetchNextMovies()
         } else {
             modeBarButton.image = UIImage(named: "view_all")
             sender.tag = 1
@@ -53,12 +58,34 @@ class MovieCatalogVC: UIViewController {
     }
     
     @objc func textFieldDidChange(_ textField: UITextField) {
+        self.dataSource.clearItems()
         self.movieCatalogViewModel.search(withsequence: textField.text!)
     }
     
     private func bindViewModel() {
+        
         self.movieCatalogViewModel = MovieCatalogViewModel()
+        self.dataSource = GenericTableViewDataSource(cellIdentifier: "movie_catalog", items: self.movieCatalogViewModel.results, configureCell: { cell, movie, index in
+            cell.configureCell(title: movie.title, imageUrl: movie.posterPath, index: index,language: movie.originalLanguage, averageVote:movie.voteAverage)
+        })
+        self.delegate = GenericTableViewDelegate(loadPagedItems: { isScrollUp in
+            if(isScrollUp) {
+                self.delegate.showHeaderView(forTableView: self.movieCatalogTV)
+                self.movieCatalogViewModel.fetchPreviousMovies()
+        
+            } else {
+                self.delegate.showFooterView(forTableView: self.movieCatalogTV)
+                self.movieCatalogViewModel.fetchNextMovies()
+            }
+        })
+        DispatchQueue.main.async {
+            self.movieCatalogTV.dataSource = self.dataSource
+            self.movieCatalogTV.delegate = self.delegate
+        }
+        
         self.movieCatalogViewModel.showToast = {
+            self.movieCatalogTV.tableHeaderView = UIView(frame: CGRect.zero)
+            self.movieCatalogTV.tableFooterView = UIView(frame: CGRect.zero)
             self.showToast(toastWith: self.movieCatalogViewModel.toastMessage)
         }
         self.movieCatalogViewModel.bindMoviesToTableView = {
@@ -68,22 +95,12 @@ class MovieCatalogVC: UIViewController {
     }
     
     private func updateMovieCatalog() {
-        self.dataSource = GenericTableViewDataSource(cellIdentifier: "movie_catalog", items: self.movieCatalogViewModel.results, configureCell: { cell, movie, index in
-            cell.configureCell(title: movie.title, imageUrl: movie.posterPath, index: index)
-        })
-        self.delegate = GenericTableViewDelegate(loadPagedItems: { isScrollUp in
-            if(isScrollUp) {
-                self.movieCatalogViewModel.fetchPreviousMovies()
-            } else {
-                self.movieCatalogViewModel.fetchNextMovies()
-            }
-        })
+    
+        self.dataSource.addItems(atTop: self.movieCatalogViewModel.hadScrolledUp, items: self.movieCatalogViewModel.results)
         DispatchQueue.main.async {
-            self.movieCatalogTV.dataSource = self.dataSource
-            self.movieCatalogTV.delegate = self.delegate
-            self.delegate.hideHeaderView()
-            self.delegate.hideFooterView()
             self.movieCatalogTV.reloadData()
+            self.movieCatalogTV.tableHeaderView = UIView(frame: CGRect.zero)
+            self.movieCatalogTV.tableFooterView = UIView(frame: CGRect.zero)
         }
     }
     
@@ -116,9 +133,9 @@ class MovieCatalogVC: UIViewController {
         if(segue.identifier == "details") {
             if let movieDetailsController = segue.destination as? MovieDetailsVC {
                 let detailViewModel = MovieDetailsViewModel()
-                detailViewModel.movieId = movieCatalogViewModel.results[(sender as! UIButton).tag].id
+                detailViewModel.movieId = self.dataSource.getMovie(atIndex: (sender as! UIButton).tag).id //movieCatalogViewModel.results[(sender as! UIButton).tag].id
                 #if DEBUG
-                print("\(movieCatalogViewModel.results[(sender as! UIButton).tag].id!)")
+                print("\(self.dataSource.getMovie(atIndex: (sender as! UIButton).tag).id)")
                 #endif
                 movieDetailsController.movieDetailViewModel = detailViewModel
             }

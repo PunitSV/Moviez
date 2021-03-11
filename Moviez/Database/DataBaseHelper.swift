@@ -16,7 +16,7 @@ class DataBaseHelper {
         
         realm.beginWrite()
         for result in movies.results! {
-            let resultDB = ResultDB.create(id: result.id!, posterPath: result.posterPath ?? "", releaseDate: result.releaseDate ?? "N/A", title: result.title!, voteAverage: result.voteAverage!)
+            let resultDB = ResultDB.create(id: result.id!, posterPath: result.posterPath ?? "", releaseDate: result.releaseDate ?? "N/A", title: result.title!, language: result.originalLanguage ?? "", voteAverage: result.voteAverage!)
             realm.add(resultDB)
             results.append(resultDB)
         }
@@ -40,7 +40,7 @@ class DataBaseHelper {
         
         var results:[Result] = []
         for result in moviesDB.results {
-            results.append(Result(adult: false, backdropPath: "", genreIDS: [], id: result.id, originalLanguage: "", originalTitle: "", overview: "", popularity: 0.0, posterPath: result.posterPath, releaseDate: result.releaseDate, title: result.title, video: false, voteAverage: result.voteAverage, voteCount: 0))
+            results.append(Result(adult: false, backdropPath: "", genreIDS: [], id: result.id, originalLanguage: result.originalLanguage, originalTitle: "", overview: "", popularity: 0.0, posterPath: result.posterPath, releaseDate: result.releaseDate, title: result.title, video: false, voteAverage: result.voteAverage, voteCount: 0))
         }
         
         movies = Movies(page: moviesDB.page, results: results, totalPages: moviesDB.totalPages, totalResults: moviesDB.totalResults)
@@ -77,7 +77,7 @@ class DataBaseHelper {
             realm.add(spokenLanguagesDB)
             spokenLanguages.append(spokenLanguagesDB)
         }
-        let movieDB = MovieDB.create(genres: genres, id: movie.id!, overview: movie.overview!, posterPath: movie.posterPath!, releaseDate: movie.releaseDate!, spokenLanguages: spokenLanguages, title: movie.title!, voteAverage: movie.voteAverage!)
+        let movieDB = MovieDB.create(genres: genres, id: movie.id!, overview: movie.overview!, posterPath: movie.posterPath!, releaseDate: movie.releaseDate!, spokenLanguages: spokenLanguages, title: movie.title!, runtime: movie.runtime ?? 0, voteAverage: movie.voteAverage!)
         
         realm.add(movieDB)
         try! realm.commitWrite()
@@ -103,7 +103,7 @@ class DataBaseHelper {
             spokenLanguages.append(SpokenLanguage(englishName: spokenLanguage.englishName, iso639_1: spokenLanguage.iso639_1, name: spokenLanguage.name))
         }
         
-        let movie = Movie(adult: false, backdropPath: "", belongsToCollection: nil, budget: 0, genres: genres, homepage: "", id: moviesDB.id, imdbID: "", originalLanguage: "", originalTitle: "", overview: moviesDB.overview, popularity: 0.0, posterPath: moviesDB.posterPath, productionCompanies: nil, productionCountries: nil, releaseDate: moviesDB.releaseDate, revenue: 0, runtime: 0, spokenLanguages: spokenLanguages, status: "", tagline: "", title: moviesDB.title, video: false, voteAverage: moviesDB.voteAverage, voteCount: 0)
+        let movie = Movie(adult: false, backdropPath: "", belongsToCollection: nil, budget: 0, genres: genres, homepage: "", id: moviesDB.id, imdbID: "", originalLanguage: "", originalTitle: "", overview: moviesDB.overview, popularity: 0.0, posterPath: moviesDB.posterPath, productionCompanies: nil, productionCountries: nil, releaseDate: moviesDB.releaseDate, revenue: 0, runtime: moviesDB.runtime, spokenLanguages: spokenLanguages, status: "", tagline: "", title: moviesDB.title, video: false, voteAverage: moviesDB.voteAverage, voteCount: 0)
      
         completion(movie)
     }

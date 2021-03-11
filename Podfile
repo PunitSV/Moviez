@@ -9,6 +9,7 @@ target 'Moviez' do
    	pod 'Alamofire'	
 	pod 'SDWebImage'
 	pod 'RealmSwift'
+	pod 'Cosmos'
 
   target 'MoviezTests' do
     inherit! :search_paths

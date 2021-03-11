@@ -7,6 +7,7 @@
 
 import UIKit
 import SDWebImage
+import Cosmos
 
 class MovieTVC: UITableViewCell {
 
@@ -14,6 +15,8 @@ class MovieTVC: UITableViewCell {
     @IBOutlet weak var moviePosterIV: UIImageView!
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var movieTitleButton: UIButton!
+    @IBOutlet weak var languageLabel: UILabel!
+    @IBOutlet weak var ratingView: CosmosView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -37,12 +40,14 @@ class MovieTVC: UITableViewCell {
         // Configure the view for the selected state
     }
     
-    func configureCell(title:String?, imageUrl:String?, index:Int?) {
+    func configureCell(title:String?, imageUrl:String?, index:Int?,language:String?, averageVote:Double?) {
         
         self.movieTitleLabel.text = title
         let imageUrl = MovieService.imageBaseUrl_w200 + (imageUrl ?? "")
-        self.moviePosterIV.sd_setImage(with: URL(string: imageUrl))
+        self.moviePosterIV.sd_setImage(with: URL(string: imageUrl), placeholderImage: UIImage(named: "image_placeholder"))
         self.movieTitleButton.tag = index ?? -1
+        self.languageLabel.text = language
+        self.ratingView.rating = averageVote ?? 0.0
     }
 
 }

@@ -119,4 +119,15 @@ class DataBaseHelper {
         }
         
     }
+    
+    func search(forSequence sequence:String, completion : @escaping ([Result]) -> ()) {
+    
+        var results:[Result] = []
+        let resultDB = realm.objects(ResultDB.self).filter("title CONTAINS %@", sequence)
+        
+        for result in resultDB {
+            results.append(Result(adult: false, backdropPath: "", genreIDS: [], id: result.id, originalLanguage: "", originalTitle: "", overview: "", popularity: 0.0, posterPath: result.posterPath, releaseDate: result.releaseDate, title: result.title, video: false, voteAverage: result.voteAverage, voteCount: 0))
+        }
+        completion(results)
+    }
 }

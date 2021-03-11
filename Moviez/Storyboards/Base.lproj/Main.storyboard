@@ -92,8 +92,16 @@
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="xwX-mZ-68R" secondAttribute="bottom" id="kbd-it-3KR"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Movie Catalog" id="1Ml-1O-KCI"/>
+                    <navigationItem key="navigationItem" title="Movie Catalog" id="1Ml-1O-KCI">
+                        <barButtonItem key="rightBarButtonItem" title="Item" image="search" id="vys-qN-4M2">
+                            <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            <connections>
+                                <action selector="toggleMode:" destination="BYZ-38-t0r" id="1SJ-Ld-4dH"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
+                        <outlet property="modeBarButton" destination="vys-qN-4M2" id="5ws-TL-OpT"/>
                         <outlet property="movieCatalogTV" destination="xwX-mZ-68R" id="G17-sv-Upm"/>
                     </connections>
                 </viewController>
@@ -331,6 +339,7 @@
     <resources>
         <image name="34.square.fill" catalog="system" width="128" height="114"/>
         <image name="pencil.circle.fill" catalog="system" width="128" height="121"/>
+        <image name="search" width="24" height="24"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

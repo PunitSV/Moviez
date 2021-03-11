@@ -30,7 +30,8 @@ class MovieCatalogViewModel: NSObject {
             self.showToast()
         }
     }
-    private var currentPage:Int!
+    private var minimumPageFetched:Int!
+    private var maximumPageFetched:Int!
     private var totalPages:Int!
     var bindMoviesToTableView: (() -> ())! {
         didSet {
@@ -42,8 +43,9 @@ class MovieCatalogViewModel: NSObject {
     
     override init() {
         super.init()
-        currentPage = 12
-        totalPages = currentPage + 1
+        minimumPageFetched = 12
+        maximumPageFetched = 12
+        totalPages = minimumPageFetched + 1
         results = []
         movieService = MovieService()
         databaseHelper = DataBaseHelper()
@@ -51,35 +53,45 @@ class MovieCatalogViewModel: NSObject {
     
     func getMovieCatalog(insert atStart:Bool) {
         if(Connectivity.isConnectedToInternet()) {
-            self.movieService.fetchMovieCatalog(page: currentPage) { (movies) in
-                if(atStart) {
+            if(atStart) {
+                self.movieService.fetchMovieCatalog(page: minimumPageFetched) { (movies) in
                     self.results.insert(contentsOf: movies.results!, at: 0)
-                } else {
-                    self.results.append(contentsOf: movies.results!)
+                    self.totalPages = movies.totalPages
+                    self.databaseHelper.emptyMovieCatalog(forPage: self.minimumPageFetched)
+                    self.databaseHelper.addMoviesCatalogToDB(movies: movies)
                 }
-                self.totalPages = movies.totalPages
-                self.databaseHelper.emptyMovieCatalog(forPage: self.currentPage)
-                self.databaseHelper.addMoviesCatalogToDB(movies: movies)
+            } else {
+                self.movieService.fetchMovieCatalog(page: maximumPageFetched) { (movies) in            self.results.append(contentsOf: movies.results!)
+                    self.totalPages = movies.totalPages
+                    self.databaseHelper.emptyMovieCatalog(forPage: self.maximumPageFetched)
+                    self.databaseHelper.addMoviesCatalogToDB(movies: movies)
+                }
             }
+            
         } else {
-            self.databaseHelper.getMovieCatalog(page: currentPage) { (movies) in
-                if(atStart) {
+            if(atStart) {
+                self.databaseHelper.getMovieCatalog(page: minimumPageFetched) { (movies) in
                     self.results.insert(contentsOf: movies.results!, at: 0)
-                } else {
-                    self.results.append(contentsOf: movies.results!)
+                    self.totalPages = movies.totalPages
                 }
-                self.totalPages = movies.totalPages
+                
+            } else {
+                self.databaseHelper.getMovieCatalog(page: maximumPageFetched) { (movies) in
+                    self.results.append(contentsOf: movies.results!)
+                    self.totalPages = movies.totalPages
+                }
             }
+            
         }
     }
     
     func fetchNextMovies() {
-        currentPage+=1
+        maximumPageFetched+=1
         #if DEBUG
-        print("Current Page: \(currentPage!)")
+        print("Current Page: \(maximumPageFetched!)")
         #endif
-        if(currentPage > totalPages) {
-            currentPage-=1
+        if(maximumPageFetched > totalPages) {
+            maximumPageFetched-=1
             self.toastMessage = "That's it!!! No more movies available"
         } else {
             getMovieCatalog(insert: false)
@@ -87,15 +99,21 @@ class MovieCatalogViewModel: NSObject {
     }
     
     func fetchPreviousMovies() {
-        currentPage-=1
+        minimumPageFetched-=1
         #if DEBUG
-        print("Current Page: \(currentPage!)")
+        print("Current Page: \(minimumPageFetched!)")
         #endif
-        if(currentPage < 1) {
-            currentPage+=1
+        if(minimumPageFetched < 1) {
+            minimumPageFetched+=1
             self.toastMessage = "No previous movies available"
         } else {
             getMovieCatalog(insert: true)
+        }
+    }
+    
+    func search(withsequence sequence:String) {
+        self.databaseHelper.search(forSequence: sequence) { (results) in
+            self.results = results
         }
     }
 }

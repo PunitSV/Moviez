@@ -7,6 +7,10 @@
 
 import UIKit
 
+/*!
+ * @typedef TrailerTVC
+ * @brief UI to display trailers list
+ */
 class TrailerTVC: UITableViewCell {
 
     @IBOutlet weak var trailerNameLabel: UILabel!
@@ -22,6 +26,10 @@ class TrailerTVC: UITableViewCell {
         // Configure the view for the selected state
     }
     
+    /*!
+     * @discussion assigned data to UI cell
+     * @param trailerName Name of the trailer
+     */
     func configureCell(trailerName:String) {
         trailerNameLabel.text = trailerName
     }

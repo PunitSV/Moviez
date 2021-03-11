@@ -69,13 +69,15 @@ class MovieCatalogVC: UIViewController {
             cell.configureCell(title: movie.title, imageUrl: movie.posterPath, index: index,language: movie.originalLanguage, averageVote:movie.voteAverage)
         })
         self.delegate = GenericTableViewDelegate(loadPagedItems: { isScrollUp in
-            if(isScrollUp) {
-                self.delegate.showHeaderView(forTableView: self.movieCatalogTV)
-                self.movieCatalogViewModel.fetchPreviousMovies()
-        
-            } else {
-                self.delegate.showFooterView(forTableView: self.movieCatalogTV)
-                self.movieCatalogViewModel.fetchNextMovies()
+            if(self.modeBarButton.tag == 0) {
+                if(isScrollUp) {
+                    self.delegate.showHeaderView(forTableView: self.movieCatalogTV)
+                    self.movieCatalogViewModel.fetchPreviousMovies()
+            
+                } else {
+                    self.delegate.showFooterView(forTableView: self.movieCatalogTV)
+                    self.movieCatalogViewModel.fetchNextMovies()
+                }
             }
         })
         DispatchQueue.main.async {

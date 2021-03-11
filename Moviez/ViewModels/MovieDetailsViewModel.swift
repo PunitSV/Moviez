@@ -7,12 +7,22 @@
 
 import Foundation
 
+/*!
+ * @typedef MovieDetailsViewModel
+ * @brief ViewModel class for MovieDetails
+ */
 class MovieDetailsViewModel: NSObject {
-    
-    
+    /*!
+     * @brief API class to make API calls
+     */
     private var movieService:MovieService!
+    /*!
+     * @brief Database class to make datbase related operations
+     */
     private var databaseHelper:DataBaseHelper!
-    
+    /*!
+     * @brief To indicate network activity
+     */
     private var isLoading:Bool! {
         didSet {
             if(isLoading) {
@@ -22,63 +32,105 @@ class MovieDetailsViewModel: NSObject {
             }
         }
     }
-    
+    /*!
+     * @brief Id associated with movie to fetch movie details
+     */
     var movieId:Int!
-    private(set) var movieVideoInfo:[VideoResult]! {
-        didSet {
-            self.bindTrailerList()
-        }
-    }
+    /*!
+     * @brief holds Image url of movie poster
+     */
     private(set) var posterImage:String! {
         didSet {
             self.bindPosterImage()
         }
     }
-    
+    /*!
+     * @brief holds name of the movie
+     */
     private(set) var movieTitle:String! {
         didSet {
             self.bindMovieTitle()
         }
     }
-    
+    /*!
+     * @brief holds genres of the movie
+     */
     private(set) var genres:String! {
         didSet {
             self.bindGenre()
         }
     }
+    /*!
+     * @brief holds released date of the movie
+     */
     private(set) var date:String! {
         didSet {
             self.bindDate()
         }
     }
+    /*!
+     * @brief holds languages of the movie
+     */
     private(set) var languages:String! {
         didSet {
             self.bindLanguages()
         }
     }
+    /*!
+     * @brief holds average voting of the movie
+     */
     private(set) var averageVoting:Double! {
         didSet {
             self.bindAverageVoting()
         }
     }
+    /*!
+     * @brief holds duration of the movie
+     */
     private(set) var duration:String! {
         didSet {
             self.bindDuration()
         }
     }
+    /*!
+     * @brief holds overview of the movie
+     */
     private(set) var overview:String! {
         didSet {
             self.bindOverview()
         }
     }
-    var bindTrailerList: (() -> ()) = {}
+    /*!
+     * @brief binds poster image of the movie to UI
+     */
     var bindPosterImage: (() -> ()) = {}
+    /*!
+     * @brief binds name of the movie to UI
+     */
     var bindMovieTitle: (() -> ()) = {}
+    /*!
+     * @brief binds genres of the movie to UI
+     */
     var bindGenre: (() -> ()) = {}
+    /*!
+     * @brief binds released date of the movie to UI
+     */
     var bindDate: (() -> ()) = {}
+    /*!
+     * @brief binds languages of the movie to UI
+     */
     var bindLanguages: (() -> ()) = {}
+    /*!
+     * @brief binds average vote of the movie to UI
+     */
     var bindAverageVoting: (() -> ()) = {}
+    /*!
+     * @brief binds duration of the movie to UI
+     */
     var bindDuration: (() -> ()) = {}
+    /*!
+     * @brief holds overview of the movie
+     */
     var bindOverview: (() -> ())! {
         didSet{
             self.getMovieDetails()
@@ -93,6 +145,9 @@ class MovieDetailsViewModel: NSObject {
         self.languages = ""
     }
     
+    /*!
+     * @brief Fetches movie details for a movie from API
+     */
     func getMovieDetails() {
         
         if(Connectivity.isConnectedToInternet()) {
@@ -146,12 +201,6 @@ class MovieDetailsViewModel: NSObject {
                 self.averageVoting = movie.voteAverage
                 self.overview = movie.overview!
             }
-        }
-    }
-    
-    func getMovieTrailers() {
-        self.movieService.fetchMovieVideoDetails(movieId: self.movieId) { (movieVideoInfo) in
-            self.movieVideoInfo = movieVideoInfo.results
         }
     }
 }

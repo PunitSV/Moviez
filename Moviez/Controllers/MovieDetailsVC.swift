@@ -32,9 +32,6 @@ class MovieDetailsVC: UIViewController {
     
     func bindViewModel() {
         
-        self.movieDetailViewModel.bindTrailerList = {
-            self.showTrailerList()
-        }
         self.movieDetailViewModel.bindPosterImage = {
             self.updatePoster()
         }
@@ -99,15 +96,7 @@ class MovieDetailsVC: UIViewController {
     func updateMovieOverview() {
         self.overviewLabel.text = self.movieDetailViewModel.overview
     }
-    
-    func showTrailerList() {
-       
-    }
 
-    @IBAction func watchTrailer(_ sender: UIButton) {
-        //self.movieDetailViewModel.getMovieTrailers()
-    }
-    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if(segue.identifier == "trailers") {
             if let trailerController = segue.destination as? TrailersTVC {
@@ -115,8 +104,19 @@ class MovieDetailsVC: UIViewController {
                 trailerViewModel.movieId = self.movieDetailViewModel.movieId
                 trailerController.trailerViewModel = trailerViewModel
             }
+            
         }
     }
     
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        if(identifier == "trailers" && Connectivity.isConnectedToInternet()) {
+            return true
+        } else {
+            let alert = UIAlertController(title: "", message: "You seems to be offline.Please check your internet connection.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+            present(alert, animated: true, completion: nil)
+            return false
+        }
+    }
 
 }

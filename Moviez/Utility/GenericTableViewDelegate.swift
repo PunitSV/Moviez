@@ -24,28 +24,6 @@ class GenericTableViewDelegate: NSObject, UITableViewDelegate {
         activityIndicatorFooter.frame = CGRect(x: CGFloat(0), y: CGFloat(0), width: CGFloat(44), height: CGFloat(44))
     }
     
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        guard let isScrollUp = isScrollingUp else {
-            return
-        }
-        let lastSectionIndex = tableView.numberOfSections - 1
-        let lastRowIndex = tableView.numberOfRows(inSection: lastSectionIndex) - 1
-        
-        if(isScrollUp) {
-            if indexPath.section ==  lastSectionIndex && indexPath.row == lastRowIndex {
-                
-                
-            }
-        } else {
-            if indexPath.section ==  0 && indexPath.row == 0 {
-                
-                
-            }
-        }
-        
-        
-    }
-    
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
   
         if (scrollView.contentOffset.y < 0) {

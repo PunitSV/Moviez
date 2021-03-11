@@ -9,6 +9,10 @@ import UIKit
 import SDWebImage
 import Cosmos
 
+/*!
+ * @typedef MovieTVC
+ * @brief UI to display for movie catalog list
+ */
 class MovieTVC: UITableViewCell {
 
     @IBOutlet weak var movieTitleLabel: UILabel!
@@ -40,6 +44,13 @@ class MovieTVC: UITableViewCell {
         // Configure the view for the selected state
     }
     
+    /*!
+     * @discussion assigned data to UI cell
+     * @param title Name of the movie
+     * @param imageUrl Endpath of the movie poster
+     * @param language Language of the movie
+     * @param averageVote Average vote for the movie
+     */
     func configureCell(title:String?, imageUrl:String?, index:Int?,language:String?, averageVote:Double?) {
         
         self.movieTitleLabel.text = title
